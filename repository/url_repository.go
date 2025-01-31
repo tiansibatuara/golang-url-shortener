@@ -42,3 +42,12 @@ func (r *URLRepository) IncrementAccessCount(code string) error {
 		Update("access_count", gorm.Expr("access_count + 1")).
 		Error
 }
+
+func (r *URLRepository) Exists(code string) (bool, error) {
+	var count int64
+	res := r.db.Model(&models.Url{}).
+		Where("short_code = ?", code).
+		Count(&count)
+		
+	return count > 0, res.Error
+}
